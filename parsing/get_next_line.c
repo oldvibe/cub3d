@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanait-e <yanait-e@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-12-05 22:52:38 by yanait-e          #+#    #+#             */
+/*   Updated: 2025-12-05 22:52:38 by yanait-e         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 #include "../cub3d.h"
 
 static char	*join_and_free(t_gc *gc, char *s1, char *s2)
@@ -27,12 +40,32 @@ static char	*join_and_free(t_gc *gc, char *s1, char *s2)
 	return (result);
 }
 
-char	*get_next_line(int fd, t_gc *gc)
+static char	*read_line(int fd, t_gc *gc, char *line)
 {
-	char	*line;
 	char	buffer[2];
 	int		bytes;
 	char	*temp;
+
+	bytes = read(fd, buffer, 1);
+	while (bytes > 0)
+	{
+		buffer[bytes] = '\0';
+		temp = join_and_free(gc, line, buffer);
+		if (!temp)
+			return (NULL);
+		line = temp;
+		if (buffer[0] == '\n')
+			break ;
+		bytes = read(fd, buffer, 1);
+	}
+	if (bytes <= 0 && ft_strlen(line) == 0)
+		return (NULL);
+	return (line);
+}
+
+char	*get_next_line(int fd, t_gc *gc)
+{
+	char	*line;
 
 	if (fd < 0)
 		return (NULL);
@@ -40,23 +73,5 @@ char	*get_next_line(int fd, t_gc *gc)
 	if (!line)
 		return (NULL);
 	line[0] = '\0';
-	while ((bytes = read(fd, buffer, 1)) > 0)
-	{
-		buffer[bytes] = '\0';
-		if (buffer[0] == '\n')
-		{
-			temp = join_and_free(gc, line, buffer);
-			if (!temp)
-				return (NULL);
-			line = temp;
-			break ;
-		}
-		temp = join_and_free(gc, line, buffer);
-		if (!temp)
-			return (NULL);
-		line = temp;
-	}
-	if (bytes <= 0 && ft_strlen(line) == 0)
-		return (NULL);
-	return (line);
+	return (read_line(fd, gc, line));
 }

@@ -1,58 +1,65 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mouvement.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanait-e <yanait-e@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-12-05 23:01:38 by yanait-e          #+#    #+#             */
+/*   Updated: 2025-12-05 23:01:38 by yanait-e         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
-void	move_forward(t_game *game)
+static int	is_wall(t_game *g, double x, double y)
 {
-	double	new_x;
-	double	new_y;
-
-	new_x = game->player.pos_x + game->player.dir_x * 0.05;
-	new_y = game->player.pos_y + game->player.dir_y * 0.05;
-	if (game->map[(int)new_y][(int)game->player.pos_x] != '1')
-		game->player.pos_y = new_y;
-	if (game->map[(int)game->player.pos_y][(int)new_x] != '1')
-		game->player.pos_x = new_x;
+	if (g->map[(int)(y + PLAYER_R)][(int)x] == '1')
+		return (1);
+	if (g->map[(int)(y - PLAYER_R)][(int)x] == '1')
+		return (1);
+	if (g->map[(int)y][(int)(x + PLAYER_R)] == '1')
+		return (1);
+	if (g->map[(int)y][(int)(x - PLAYER_R)] == '1')
+		return (1);
+	return (0);
 }
 
-void	move_backward(t_game *game)
+static void	try_move(t_game *g, double dx, double dy)
 {
-	double	new_x;
-	double	new_y;
+	double	nx;
+	double	ny;
 
-	new_x = game->player.pos_x - game->player.dir_x * 0.05;
-	new_y = game->player.pos_y - game->player.dir_y * 0.05;
-	if (game->map[(int)new_y][(int)game->player.pos_x] != '1')
-		game->player.pos_y = new_y;
-	if (game->map[(int)game->player.pos_y][(int)new_x] != '1')
-		game->player.pos_x = new_x;
+	nx = g->player.pos_x + dx;
+	ny = g->player.pos_y + dy;
+	if (!is_wall(g, nx, ny))
+	{
+		g->player.pos_x = nx;
+		g->player.pos_y = ny;
+	}
 }
 
-void	move_left(t_game *game)
+void	move_forward(t_game *g)
 {
-	double	new_x;
-	double	new_y;
-
-	new_x = game->player.pos_x - game->player.plane_x * 0.05;
-	new_y = game->player.pos_y - game->player.plane_y * 0.05;
-	if (game->map[(int)new_y][(int)game->player.pos_x] != '1')
-		game->player.pos_y = new_y;
-	if (game->map[(int)game->player.pos_y][(int)new_x] != '1')
-		game->player.pos_x = new_x;
+	try_move(g, g->player.dir_x * MOVE_SPEED, g->player.dir_y * MOVE_SPEED);
 }
 
-void	move_right(t_game *game)
+void	move_backward(t_game *g)
 {
-	double	new_x;
-	double	new_y;
-
-	new_x = game->player.pos_x + game->player.plane_x * 0.05;
-	new_y = game->player.pos_y + game->player.plane_y * 0.05;
-	if (game->map[(int)new_y][(int)game->player.pos_x] != '1')
-		game->player.pos_y = new_y;
-	if (game->map[(int)game->player.pos_y][(int)new_x] != '1')
-		game->player.pos_x = new_x;
+	try_move(g, -g->player.dir_x * MOVE_SPEED, -g->player.dir_y * MOVE_SPEED);
 }
 
-int	game_loop(t_game *game)
+void	move_left(t_game *g)
+{
+	try_move(g, -g->player.plane_x * MOVE_SPEED, -g->player.plane_y * MOVE_SPEED);
+}
+
+void	move_right(t_game *g)
+{
+	try_move(g, g->player.plane_x * MOVE_SPEED, g->player.plane_y * MOVE_SPEED);
+}
+
+static int	handle_move_keys(t_game *game)
 {
 	int	updated;
 
@@ -77,6 +84,14 @@ int	game_loop(t_game *game)
 		move_right(game);
 		updated = 1;
 	}
+	return (updated);
+}
+
+static int	handle_rotate_keys(t_game *game)
+{
+	int	updated;
+
+	updated = 0;
 	if (game->key_left)
 	{
 		rotate_left(game);
@@ -87,6 +102,18 @@ int	game_loop(t_game *game)
 		rotate_right(game);
 		updated = 1;
 	}
+	return (updated);
+}
+
+int	game_loop(t_game *game)
+{
+	int	updated;
+
+	updated = 0;
+	if (handle_move_keys(game))
+		updated = 1;
+	if (handle_rotate_keys(game))
+		updated = 1;
 	if (updated)
 		raycasting(game);
 	return (0);

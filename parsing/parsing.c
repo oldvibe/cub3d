@@ -63,9 +63,9 @@ int parse_file(char *filename, t_game *game)
         return (0);
 
     // load textures using paths from t_data
-    if (!load_texture(game, &game->tex_north, data.north_tex)
+    if (!load_texture(game, &game->tex_north, data.south_tex)
         || !load_texture(game, &game->tex_south, data.south_tex)
-        || !load_texture(game, &game->tex_west, data.west_tex)
+        || !load_texture(game, &game->tex_west, data.east_tex)
         || !load_texture(game, &game->tex_east, data.east_tex))
         return (0);
 

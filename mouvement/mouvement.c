@@ -51,7 +51,8 @@ void	move_backward(t_game *g)
 
 void	move_left(t_game *g)
 {
-	try_move(g, -g->player.plane_x * MOVE_SPEED, -g->player.plane_y * MOVE_SPEED);
+	try_move(g, -g->player.plane_x * MOVE_SPEED, -g->player.plane_y
+		* MOVE_SPEED);
 }
 
 void	move_right(t_game *g)

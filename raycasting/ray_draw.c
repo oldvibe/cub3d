@@ -18,8 +18,7 @@ int	get_texture_color(t_texture *tex, int x, int y)
 
 	if (x < 0 || x >= tex->width || y < 0 || y >= tex->height)
 		return (0);
-	dst = tex->img.addr + (y * tex->img.line_len
-			+ x * (tex->img.bpp / 8));
+	dst = tex->img.addr + (y * tex->img.line_len + x * (tex->img.bpp / 8));
 	return (*(unsigned int *)dst);
 }
 
@@ -29,8 +28,7 @@ void	my_mlx_pixel_put(t_img *img, int x, int y, int color)
 
 	if (x < 0 || x >= WIN_WIDTH || y < 0 || y >= WIN_HEIGHT)
 		return ;
-	dst = img->addr + (y * img->line_len
-			+ x * (img->bpp / 8));
+	dst = img->addr + (y * img->line_len + x * (img->bpp / 8));
 	*(unsigned int *)dst = color;
 }
 
@@ -61,8 +59,7 @@ static int	get_tex_x(t_ray *r, t_texture *t, double wall_x)
 	int	tex_x;
 
 	tex_x = (int)(wall_x * t->width);
-	if ((r->side == 0 && r->dir_x > 0)
-		|| (r->side == 1 && r->dir_y < 0))
+	if ((r->side == 0 && r->dir_x > 0) || (r->side == 1 && r->dir_y < 0))
 		tex_x = t->width - tex_x - 1;
 	return (tex_x);
 }
@@ -80,14 +77,12 @@ static void	draw_column(t_game *g, t_ray *r, int x, t_texture *t)
 		my_mlx_pixel_put(&g->img, x, y++, g->ceiling_color);
 	tex_x = get_tex_x(r, t, get_wall_x(g, r));
 	step = (double)t->height / r->line_height;
-	tex_pos = (r->draw_start - WIN_HEIGHT / 2
-			+ r->line_height / 2) * step;
+	tex_pos = (r->draw_start - WIN_HEIGHT / 2 + r->line_height / 2) * step;
 	while (y <= r->draw_end)
 	{
 		tex_y = (int)tex_pos & (t->height - 1);
 		tex_pos += step;
-		my_mlx_pixel_put(&g->img, x, y++,
-			get_texture_color(t, tex_x, tex_y));
+		my_mlx_pixel_put(&g->img, x, y++, get_texture_color(t, tex_x, tex_y));
 	}
 	while (y < WIN_HEIGHT)
 		my_mlx_pixel_put(&g->img, x, y++, g->floor_color);
@@ -106,5 +101,3 @@ void	draw_wall(t_game *game, t_ray *ray, int x)
 	tex = select_texture(game, ray);
 	draw_column(game, ray, x, tex);
 }
-
-

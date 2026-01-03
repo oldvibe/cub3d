@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../cub3d.h"
 
 static void	rotate_dir(t_player *p, double angle)

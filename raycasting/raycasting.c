@@ -6,12 +6,15 @@ void	calculate_wall_distance(t_ray *ray, t_game *game)
 		ray->perp_wall_dist = (ray->map_x - game->player.pos_x + (1 - ray->step_x) / 2) / ray->dir_x;
 	else
 		ray->perp_wall_dist = (ray->map_y - game->player.pos_y + (1 - ray->step_y) / 2) / ray->dir_y;
+
 	if (ray->perp_wall_dist < 0.0001)
 		ray->perp_wall_dist = 0.0001;
+
 	ray->line_height = (int)(WIN_HEIGHT / ray->perp_wall_dist);
 	ray->draw_start = -ray->line_height / 2 + WIN_HEIGHT / 2;
 	if (ray->draw_start < 0)
 		ray->draw_start = 0;
+
 	ray->draw_end = ray->line_height / 2 + WIN_HEIGHT / 2;
 	if (ray->draw_end >= WIN_HEIGHT)
 		ray->draw_end = WIN_HEIGHT - 1;

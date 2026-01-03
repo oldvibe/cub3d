@@ -82,8 +82,7 @@ int valid_cell(t_map *map, int y, int x)
 }
 int check_walls(t_map *map)
 {
-    int y;
-    int x;
+    int (y),x;
     y = 0;
     while (y < map->map_height)
     {
@@ -93,7 +92,7 @@ int check_walls(t_map *map)
             if (!valid_cell(map, y, x))
             {
                 printf("ERROR\nThe map must be closed/surrounded by walls\n");
-                // printf("ERROR at position [%d][%d] = '%c'\n", y, x, map->grid[y][x]);
+                printf("ERROR at position [%d][%d] = '%c'\n", y, x, map->grid[y][x]);
                 return (0);
             }
             x++;

@@ -2,7 +2,7 @@
 
 int	handle_keyrelease(int keycode, t_game *game)
 {
-	printf("DEBUG: Key released: %d\n", keycode);
+	// printf("DEBUG: Key released: %d\n", keycode);
 	if (keycode == KEY_W || keycode == 119 || keycode == 13)
 		game->key_w = 0;
 	else if (keycode == KEY_S || keycode == 115 || keycode == 1)
@@ -20,7 +20,7 @@ int	handle_keyrelease(int keycode, t_game *game)
 
 int	handle_keypress(int keycode, t_game *game)
 {
-	printf("DEBUG: Key pressed: %d\n", keycode);
+	// printf("DEBUG: Key pressed: %d\n", keycode);
 	if (keycode == KEY_ESC || keycode == 65307)
 		exit_game(game);
 	else if (keycode == KEY_W || keycode == 119 || keycode == 13)

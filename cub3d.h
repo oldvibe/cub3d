@@ -25,7 +25,7 @@
 # define WIN_HEIGHT 800
 
 # define MOVE_SPEED 0.03
-# define PLAYER_R 0.15
+# define PLAYER_R 0.10
 
 /* ============================== */
 /*             KEYS               */
